@@ -11,15 +11,16 @@
 import configparser
 import logging
 from six import PY3
+import os
 config = configparser.ConfigParser()
 
 def read_config_key(section, key):
-    config.read('config.ini')
+    config.read(os.path.dirname(__file__) + '\\config.ini')   
     return config[section][key]
 
 def write_config_key(section, key, value):
     config[section][key] = value
-    with open('config.ini', 'w') as configfile:  # save
+    with open(os.path.dirname(__file__) + '\\config.ini', 'w') as configfile:  # save
         config.write(configfile)
 
 def get_default_logger(name):

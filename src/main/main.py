@@ -21,6 +21,10 @@ from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import pyqtgraph.exporters as pe
 import qdarkstyle, requests, sys, time, random, json, datetime, re
+import os
+path = os.path.abspath(os.path.dirname(__file__)+os.path.sep+"..")
+father_path = os.path.abspath(path + os.path.sep +  "..")
+sys.path.append(father_path)
 from src.cert_issuer import config as cert_issue_config
 from src.cert_issuer import issue_certificates
 from src.main.api import school_login, get_cert, get_cert_detail, cert_issue
@@ -417,4 +421,5 @@ def main():
 
 
 if __name__ == '__main__':
+    # sys.path.append('D:/My Files/CodingZone/blockCertsClonedRepoSchoolClient/block_certs_school_client/src/main/main.py')
     main()
