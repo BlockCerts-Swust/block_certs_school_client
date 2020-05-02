@@ -421,5 +421,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # sys.path.append('D:/My Files/CodingZone/blockCertsClonedRepoSchoolClient/block_certs_school_client/src/main/main.py')
     main()
