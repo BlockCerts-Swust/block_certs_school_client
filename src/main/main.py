@@ -10,12 +10,12 @@
 """
 from threading import Thread
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QDesktopWidget, QStyleFactory, QWidget,
                              QGridLayout, QHeaderView, QTableWidgetItem, QMessageBox, QFileDialog,
                              QSlider, QLabel, QLineEdit, QPushButton, QTableWidget, QGraphicsLayoutItem, QFrame,
                              QStackedLayout, QTextBrowser, QComboBox, QRadioButton, QVBoxLayout)
-from PyQt5.QtGui import QPalette, QColor, QBrush
+from PyQt5.QtGui import QPalette, QColor, QBrush, QIcon
 from PyQt5.QtCore import Qt, QTranslator, QEvent
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
@@ -58,6 +58,7 @@ class MainUi(QMainWindow):
 
         # 标题栏
         self.setWindowTitle(self.tr(u"Issue cert"))
+        self.setWindowIcon(QIcon(path + "\\icon\\icon.png"))
 
     def init_ui(self):
         # self.setFixedSize(960,700)
@@ -265,6 +266,7 @@ class LoginUi(QMainWindow):
 
         # 标题栏
         self.setWindowTitle(self.tr(u"Login"))
+        self.setWindowIcon(QIcon(path + "\\icon\\icon.png"))
         language = read_config_key("USER", "language")
         if language == "zh_CN":
             self.trans.load('zh_CN')
@@ -365,7 +367,7 @@ class LoginUi(QMainWindow):
         self.username_label.setText(QApplication.translate('LoginUi', 'username'))
         self.username.setPlaceholderText(QApplication.translate('LoginUi','Please enter your username:'))
         self.password_label.setText(QApplication.translate('LoginUi', 'password'))
-        self.password.setPlaceholderText(QApplication.translate('LoginUi', 'password'))
+        self.password.setPlaceholderText(QApplication.translate('LoginUi', 'Please enter your password:'))
         self.private_key_label.setText(QApplication.translate('LoginUi', 'Private key'))
         self.private_key.setPlaceholderText(QApplication.translate('LoginUi', 'Please enter your private key:'))
         self.login_button.setText(QApplication.translate('LoginUi', 'Login'))
