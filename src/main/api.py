@@ -92,9 +92,12 @@ def get_cert_detail(cert_id, api_token):
         'API-HTTP-AUTHORIZATION': api_token
     }
     response = MyRequest.get(url=url, headers=headers)
+    response["unsign_cert"]["badge"]["image"] = response["unsign_cert"]["badge"]["image"].replace(DEFAULT_BASE_URL, "")
+    response["unsign_cert"]["badge"]["issuer"]["id"] = response["unsign_cert"]["badge"]["issuer"]["id"].replace(DEFAULT_BASE_URL, "")
+    response["unsign_cert"]["badge"]["issuer"]["revocationList"] = response["unsign_cert"]["badge"]["issuer"]["revocationList"].replace(DEFAULT_BASE_URL, "")
     return response
 
-def cert_issue(cert_id, api_token, block_cert, tx_id):
+def cert_issue(cert_id, api_token, block_cert, tx_id, chain):
     url = DEFAULT_BASE_URL + "/v1/api/school_certificates/"+cert_id+"/issue/"
     headers = {
         'Content-Type': "application/json",
@@ -102,7 +105,8 @@ def cert_issue(cert_id, api_token, block_cert, tx_id):
     }
     data = {
         "block_cert": block_cert,
-        "tx_id": tx_id
+        "tx_id": tx_id,
+        "chain": chain
     }
     response = MyRequest.post(url=url, data=data, headers=headers)
     return response

@@ -29,6 +29,7 @@ from src.cert_issuer import config as cert_issue_config
 from src.cert_issuer import issue_certificates
 from src.main.api import school_login, get_cert, get_cert_detail, cert_issue
 from src.main.utils import read_config_key, write_config_key
+from src.main import data
 
 
 class EmittingStream(QtCore.QObject):
@@ -163,7 +164,7 @@ class MainUi(QMainWindow):
         if rst is False:
             QMessageBox.information(self, self.tr('information'), self.tr(u'Please fill in the issue information'))
             return
-        if self.password.text() != read_config_key("USER", "password"):
+        if self.password.text() != data.password:
             QMessageBox.information(self, self.tr('information'), self.tr(u'Password wrong'))
             return
         t = Thread(target=self.issue_function)
@@ -171,31 +172,34 @@ class MainUi(QMainWindow):
 
     def issue_function(self):
         try:
-            cert_id = self.cert_id.text()
-            api_token = read_config_key("USER", "api_token")
-            issuing_address = read_config_key("USER", "public_key")
-            secret_key = read_config_key("USER", "secret_key")
+            cert_id = "cert_wsid_" + self.cert_id.text()
+            api_token = data.api_token
+            issuing_address = data.public_key
+            secret_key = data.secret_key
             chain = self.cb.currentText()
             self.text_Browser_add(cert_id + self.tr(" Issuing ... "))
-            self.text_Browser_add(self.tr("\tGet cert info ..."))
+            self.text_Browser_add("\t"+ self.tr("Get cert info ..."))
             response = get_cert(cert_id, api_token)
+            if response["status"] == 1:
+                self.text_Browser_add("\t" + self.tr("Cert already issued ..."))
+                return
             QApplication.processEvents()
-            self.text_Browser_add(self.tr("\tGet cert detail ..."))
+            self.text_Browser_add("\t" + self.tr("Get cert detail ..."))
             cert_info = get_cert_detail(cert_id, api_token)
             QApplication.processEvents()
-            self.text_Browser_add(self.tr("\tSigning and issuing cert, it will take a long time, please wait ..."))
+            self.text_Browser_add("\t" + self.tr("Signing and issuing cert, it will take a long time, please wait ..."))
             parsed_config = self.parsed_config(issuing_address, secret_key, cert_info, chain)
             QApplication.processEvents()
             tx_id, certificates_to_issue = issue_certificates.main(parsed_config)
-            self.text_Browser_add(self.tr("\tblock_cert tx_id ") + tx_id)
+            self.text_Browser_add("\t" + self.tr("block_cert tx_id ") + tx_id)
             if tx_id:
                 for _, metadata in certificates_to_issue.items():
                     block_cert = metadata.blockcert
-                    self.text_Browser_add(self.tr("\tblock_cert upload..."))
-                    cert_issue(cert_id=cert_id, api_token=api_token, block_cert=block_cert, tx_id=tx_id)
+                    self.text_Browser_add("\t" + self.tr("block_cert upload..."))
+                    cert_issue(cert_id=cert_id, api_token=api_token, block_cert=block_cert, tx_id=tx_id, chain=chain)
                     QApplication.processEvents()
                     break
-                self.text_Browser_add("\t" + cert_id + self.tr("Issue success"))
+                self.text_Browser_add(cert_id + self.tr("Issue success"))
             else:
                 self.text_Browser_add(cert_id + self.tr(" Issue Fail"))
         except Exception as e:
@@ -364,6 +368,7 @@ class LoginUi(QMainWindow):
 
     # 更新UI
     def retranslateUi(self):        # 1
+        self.setWindowTitle(QApplication.translate('LoginUi', 'Login'))
         self.username_label.setText(QApplication.translate('LoginUi', 'username'))
         self.username.setPlaceholderText(QApplication.translate('LoginUi','Please enter your username:'))
         self.password_label.setText(QApplication.translate('LoginUi', 'password'))
@@ -385,19 +390,22 @@ class LoginUi(QMainWindow):
             return
         try:
             self.status.showMessage(self.tr("Login..."))
+            data.username = self.username.text()
+            data.password = self.password.text()
+            data.secret_key = self.private_key.text()
             QtWidgets.QApplication.processEvents()
             if self.remember_me_button.isChecked():
-                write_config_key("USER", "username", self.username.text)
-                write_config_key("USER", "password", self.password.text)
-                write_config_key("USER", "secret_key", self.private_key.text)
-            username = self.username.text()
-            password = self.password.text()
-            response = school_login(username, password)
+                write_config_key("USER", "username", data.username)
+                write_config_key("USER", "password", data.password)
+                write_config_key("USER", "secret_key", data.secret_key)
+            else:
+                write_config_key("USER", "username", "")
+                write_config_key("USER", "password", "")
+                write_config_key("USER", "secret_key", "")
+            response = school_login(data.username, data.password)
             QApplication.processEvents()
-            public_key = response["data"]["school"]["public_key"]
-            api_token = response["data"]["token"]
-            write_config_key("USER", "api_token", api_token)
-            write_config_key("USER", "public_key", public_key)
+            data.public_key = response["data"]["school"]["public_key"]
+            data.api_token = response["data"]["token"]
             self.close()
             self.main = MainUi()
             self.main.show()
