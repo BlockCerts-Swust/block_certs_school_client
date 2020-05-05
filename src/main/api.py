@@ -74,7 +74,7 @@ def school_login(email, password):
     return response
 
 def get_cert(cert_id, api_token):
-    url = DEFAULT_BASE_URL + "/v1/api/certificates/" + cert_id + "/"
+    url = DEFAULT_BASE_URL + "/v1/api/school_certificates/" + cert_id + "/"
 
     headers = {
         'Content-Type': "application/json",
@@ -86,7 +86,7 @@ def get_cert(cert_id, api_token):
     return response
 
 def get_cert_detail(cert_id, api_token):
-    url = DEFAULT_BASE_URL + "/v1/api/certificates/"+ cert_id + "/detail"
+    url = DEFAULT_BASE_URL + "/v1/api/school_certificates/"+ cert_id + "/detail"
     headers = {
         'Content-Type': "application/json",
         'API-HTTP-AUTHORIZATION': api_token
