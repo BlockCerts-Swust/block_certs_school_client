@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QDesktopWidget, QStyleFa
                              QSlider, QLabel, QLineEdit, QPushButton, QTableWidget, QGraphicsLayoutItem, QFrame,
                              QStackedLayout, QTextBrowser, QComboBox, QRadioButton, QVBoxLayout)
 from PyQt5.QtGui import QPalette, QColor, QBrush, QIcon
-from PyQt5.QtCore import Qt, QTranslator, QEvent
+from PyQt5.QtCore import Qt, QTranslator, QEvent, pyqtSignal
 from pyqtgraph import GraphicsLayoutWidget
 import pyqtgraph as pg
 import pyqtgraph.exporters as pe
@@ -39,6 +39,7 @@ class EmittingStream(QtCore.QObject):
         self.textWritten.emit(str(text))
 
 class MainUi(QMainWindow):
+    signal = pyqtSignal(str)
     def __init__(self):
         super().__init__()
 
@@ -60,6 +61,7 @@ class MainUi(QMainWindow):
         # 标题栏
         self.setWindowTitle(self.tr(u"Issue cert"))
         self.setWindowIcon(QIcon(path + "\\icon\\icon.png"))
+        self.signal.connect(self.text_Browser_add)
 
     def init_ui(self):
         # self.setFixedSize(960,700)
@@ -177,33 +179,44 @@ class MainUi(QMainWindow):
             issuing_address = data.public_key
             secret_key = data.secret_key
             chain = self.cb.currentText()
-            self.text_Browser_add(cert_id + self.tr(" Issuing ... "))
-            self.text_Browser_add("\t"+ self.tr("Get cert info ..."))
+            self.signal.emit(cert_id + self.tr(" Issuing ... "))
+            # self.text_Browser_add(cert_id + self.tr(" Issuing ... "))
+            self.signal.emit("\t"+ self.tr("Get cert info ..."))
+            # self.text_Browser_add("\t"+ self.tr("Get cert info ..."))
             response = get_cert(cert_id, api_token)
             if response["status"] == 1:
-                self.text_Browser_add("\t" + self.tr("Cert already issued ..."))
+                self.signal.emit("\t" + self.tr("Cert already issued ..."))
+                # self.text_Browser_add("\t" + self.tr("Cert already issued ..."))
                 return
             QApplication.processEvents()
-            self.text_Browser_add("\t" + self.tr("Get cert detail ..."))
+            self.signal.emit("\t" + self.tr("Get cert detail ..."))
+            # self.text_Browser_add("\t" + self.tr("Get cert detail ..."))
             cert_info = get_cert_detail(cert_id, api_token)
             QApplication.processEvents()
-            self.text_Browser_add("\t" + self.tr("Signing and issuing cert, it will take a long time, please wait ..."))
+            self.signal.emit("\t" + self.tr("Signing and issuing cert, it will take a long time, please wait ..."))
+            # self.text_Browser_add("\t" + self.tr("Signing and issuing cert, it will take a long time, please wait ..."))
             parsed_config = self.parsed_config(issuing_address, secret_key, cert_info, chain)
             QApplication.processEvents()
             tx_id, certificates_to_issue = issue_certificates.main(parsed_config)
-            self.text_Browser_add("\t" + self.tr("block_cert tx_id ") + tx_id)
+            # self.text_Browser_add("\t" + self.tr("block_cert tx_id ") + tx_id)
+            self.signal.emit("\t" + self.tr("block_cert tx_id ") + tx_id)
             if tx_id:
                 for _, metadata in certificates_to_issue.items():
                     block_cert = metadata.blockcert
-                    self.text_Browser_add("\t" + self.tr("block_cert upload..."))
+                    # self.text_Browser_add("\t" + self.tr("block_cert upload..."))
+                    self.signal.emit("\t" + self.tr("block_cert upload..."))
                     cert_issue(cert_id=cert_id, api_token=api_token, block_cert=block_cert, tx_id=tx_id, chain=chain)
                     QApplication.processEvents()
                     break
-                self.text_Browser_add(cert_id + self.tr("Issue success"))
+                self.signal.emit(cert_id + self.tr("Issue success"))
+                # self.text_Browser_add(cert_id + self.tr("Issue success"))
             else:
-                self.text_Browser_add(cert_id + self.tr(" Issue Fail"))
+                self.signal.emit(cert_id + self.tr("Issue Fail"))
+                # self.text_Browser_add(cert_id + self.tr(" Issue Fail"))
         except Exception as e:
-            self.text_Browser_add(self.tr(" Issue Fail"))
+            self.signal.emit(self.tr(e))
+            self.signal.emit(self.tr("Issue Fail"))
+            # self.text_Browser_add(self.tr(" Issue Fail"))
 
     def form_valid(self):
         print(self.cert_id.text())

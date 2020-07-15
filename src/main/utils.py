@@ -14,13 +14,22 @@ from six import PY3
 import os
 config = configparser.ConfigParser()
 
+
 def read_config_key(section, key):
     config.read(os.path.dirname(__file__) + '\\config.ini')   
+
+fp_dir = os.getcwd() #取得的是exe文件路径
+path = os.path.join(fp_dir, "config.ini") #拼接上配置文件名称目录
+def read_config_key(section, key):
+    # config.read(os.path.dirname(__file__) + '\\config.ini')
+    config.read(path)
     return config[section][key]
 
 def write_config_key(section, key, value):
     config[section][key] = value
-    with open(os.path.dirname(__file__) + '\\config.ini', 'w') as configfile:  # save
+    # with open(os.path.dirname(__file__) + '\\config.ini', 'w') as configfile:  # save
+    # with open(os.path.dirname(__file__) + '\\config.ini', 'w') as configfile:  # save
+    with open(path, 'w') as configfile:  # save
         config.write(configfile)
 
 def get_default_logger(name):
