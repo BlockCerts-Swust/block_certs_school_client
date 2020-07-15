@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['src\\main\\main.py'],
-             pathex=['D:\\PythonCode\\block_certs_school_client'],
+             pathex=['D:\\My Files\\CodingZone\\blockCertsClonedRepoSchoolClient\\block_certs_school_client'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -26,7 +26,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False )
+          console=True )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
