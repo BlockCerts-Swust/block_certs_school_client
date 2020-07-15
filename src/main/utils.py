@@ -15,8 +15,8 @@ import os
 config = configparser.ConfigParser()
 
 
-def read_config_key(section, key):
-    config.read(os.path.dirname(__file__) + '\\config.ini')   
+# def read_config_key(section, key):
+#     config.read(os.path.dirname(__file__) + '\\config.ini')   
 
 fp_dir = os.getcwd() #取得的是exe文件路径
 path = os.path.join(fp_dir, "config.ini") #拼接上配置文件名称目录
