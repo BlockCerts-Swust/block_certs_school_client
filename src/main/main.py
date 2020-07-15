@@ -214,7 +214,7 @@ class MainUi(QMainWindow):
                 self.signal.emit(cert_id + self.tr("Issue Fail"))
                 # self.text_Browser_add(cert_id + self.tr(" Issue Fail"))
         except Exception as e:
-            print(e)
+            self.signal.emit(self.tr(e))
             self.signal.emit(self.tr("Issue Fail"))
             # self.text_Browser_add(self.tr(" Issue Fail"))
 
