@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['src\\main\\main.py'],
-             pathex=['D:\\My Files\\CodingZone\\blockCertsClonedRepoSchoolClient\\block_certs_school_client'],
+             pathex=['../schoolClient/Lib/site-packages/PyQt5/Qt/bin', 'D:\\My Files\\CodingZone\\blockCertsClonedRepoSchoolClient\\block_certs_school_client'],
              binaries=[],
              datas=[],
              hiddenimports=[],
