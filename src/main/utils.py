@@ -19,10 +19,13 @@ config = configparser.ConfigParser()
 #     config.read(os.path.dirname(__file__) + '\\config.ini')   
 
 fp_dir = os.getcwd() #取得的是exe文件路径
-path = os.path.join(fp_dir, "config.ini") #拼接上配置文件名称目录
+#print('Current dir: ', fp_dir)
+#path = os.path.join(fp_dir, "config.ini") #拼接上配置文件名称目录
+path = os.path.dirname(__file__) + '\\config.ini'
+#print('Current path: ', path)
 def read_config_key(section, key):
-    # config.read(os.path.dirname(__file__) + '\\config.ini')
     config.read(path)
+    #config.read(path)
     return config[section][key]
 
 def write_config_key(section, key, value):
