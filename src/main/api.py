@@ -15,7 +15,7 @@ import requests
 
 from src.main.utils import get_default_logger
 
-DEFAULT_BASE_URL = "http://10.10.3.2:8000"
+DEFAULT_BASE_URL = "http://127.0.0.1:8000"
 DEFAULT_TIMEOUT = ""
 
 log = get_default_logger(__name__)
