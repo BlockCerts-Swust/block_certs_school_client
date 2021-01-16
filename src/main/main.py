@@ -367,7 +367,7 @@ class LoginUi(QMainWindow):
 
     # language change
     def change_func(self):
-        #print(self.combo.currentText())
+        print(self.combo.currentText())
         if self.combo.currentText() == '中文':
             write_config_key("USER", "language", "zh_CN")
             self.trans.load('zh_CN')
