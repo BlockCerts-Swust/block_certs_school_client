@@ -37,7 +37,7 @@ MarkupSafe==1.1.1
 merkletools==1.0.2
 mock==2.0.0
 mypy-extensions==0.4.3
-numpy==1.18.3
+numpy==1.22.0
 openapi-spec-validator==0.2.8
 packaging==20.3
 pbkdf2==1.3
