@@ -32,7 +32,7 @@ inflection==0.4.0
 itsdangerous==1.1.0
 Jinja2==2.11.2
 jsonschema==2.6.0
-lxml==4.5.0
+lxml==4.9.1
 MarkupSafe==1.1.1
 merkletools==1.0.2
 mock==2.0.0
