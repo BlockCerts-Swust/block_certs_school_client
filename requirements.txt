@@ -3,7 +3,7 @@ attrs==19.3.0
 cachetools==4.1.0
 cert-core==2.1.9
 cert-schema==2.1.6
-certifi==2020.4.5.1
+certifi==2022.12.7
 cffi==1.14.0
 chainpoint==0.0.2
 chardet==3.0.4
